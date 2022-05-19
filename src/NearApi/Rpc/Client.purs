@@ -23,6 +23,7 @@ import Record as Record
 
 data ClientError
     = TransportError String
+    | RpcError String
     | MethodError String
     | OtherError String
 
@@ -54,7 +55,7 @@ view_access_keys =
                 , id : "dontcare"
                 , method : "query"
                 , params : 
-                    { request_type : "view_access_key"
+                    { request_type : "vie_access_key"
                     , finality : "final"
                     }
                 }
@@ -80,7 +81,7 @@ decideError (Right { body : bodyjson }) =
             case final_result of
                 Left err -> Left $ OtherError $ show err
                 Right b -> Right b
-        Tuple (Right err) _ -> Left $ TransportError $ err.error.message
+        Tuple (Right err) _ -> Left $ RpcError $ err.error.message <> " (caused by -> " <> err.error.cause.info.error_message <> ")"
         Tuple _ (Right err) -> Left $ MethodError $ err.result.error
 
 call :: forall req res. EncodeJson req => DecodeJson res => NetworkConfig -> req -> Aff (Either ClientError res)

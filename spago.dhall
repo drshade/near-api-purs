@@ -1,4 +1,4 @@
-{ name = "near-sdk-purs"
+{ name = "near-api-purs"
 , dependencies =
   [ "aff"
   , "affjax"

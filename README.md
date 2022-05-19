@@ -24,10 +24,14 @@ runWeb3 :: forall a. Web3 a -> Aff (Either Web3Error a)
 ```PureScript
 main :: Effect Unit
 main = do
-	balance <- runWeb3 do
-		near <- NearApi.connect mainnet
-		wallet <- NearApi.wallet near
-		accountId <- NearApi.accountId wallet
-	log "Balance: " <> balance
+    accountId <- runWeb3 do
+        near <- NearApi.connect mainnet
+        wallet <- NearApi.wallet near
+        accountId <- NearApi.accountId wallet
+        pure accountId
+
+    case accountId of
+        Left err  -> log $ "An error occurred: " <> show err
+        Right id  -> log $ "Your account id: " <> show id
 ```
 

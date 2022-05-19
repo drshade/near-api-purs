@@ -25,7 +25,7 @@ data ClientError
     = TransportError String
     | RpcError String
     | MethodError String
-    | OtherError String
+    | UnexpectedResponseError String
 
 derive instance genericClientError :: Generic ClientError _
 instance showClientError :: Show ClientError where show = genericShow
@@ -55,7 +55,7 @@ view_access_keys =
                 , id : "dontcare"
                 , method : "query"
                 , params : 
-                    { request_type : "vie_access_key"
+                    { request_type : "view_access_key"
                     , finality : "final"
                     }
                 }
@@ -66,23 +66,33 @@ view_access_keys =
         m = rpc { params = Record.union rpc.params r }
     in call testnet m
 
-decideError :: forall a. DecodeJson a => Either Affjax.Error (Affjax.Response Json) -> Either ClientError a
-decideError (Left err) = Left $ TransportError $ Affjax.printError err
-decideError (Right { body : bodyjson }) =
-    let error_result :: Either JsonDecodeError JsonRpcResponseError
-        error_result = decodeJson bodyjson
-        error_result' :: Either JsonDecodeError JsonRpcResponseResultError
-        error_result' = decodeJson bodyjson
-        final_result :: Either JsonDecodeError a
-        final_result = decodeJson bodyjson
-    in 
-    case Tuple error_result error_result' of
-        Tuple (Left _) (Left _) -> 
-            case final_result of
-                Left err -> Left $ OtherError $ show err
-                Right b -> Right b
+decodeResponse :: forall a. DecodeJson a => Either Affjax.Error (Affjax.Response Json) -> Either ClientError a
+-- An error at the Affjax level (transport / DNS etc)
+decodeResponse (Left err) = Left $ TransportError $ Affjax.printError err
+-- We got a response
+decodeResponse (Right { body : bodyjson }) =
+    -- Try to parse the various "error" shaped types from the response
+    -- plus the one we are expecting
+    let error_result_rpc :: Either JsonDecodeError JsonRpcResponseError
+        error_result_rpc = decodeJson bodyjson
+        error_result_method :: Either JsonDecodeError JsonRpcResponseResultError
+        error_result_method = decodeJson bodyjson
+        expected_result :: Either JsonDecodeError a
+        expected_result = decodeJson bodyjson
+    in
+    -- Which one worked?
+    case Tuple error_result_rpc error_result_method of
+        -- Error from the RPC envelope level
         Tuple (Right err) _ -> Left $ RpcError $ err.error.message <> " (caused by -> " <> err.error.cause.info.error_message <> ")"
+        -- Error from the Method envelope level
         Tuple _ (Right err) -> Left $ MethodError $ err.result.error
+        -- Cool, so try the expected one
+        Tuple (Left _) (Left _) -> 
+            case expected_result of
+                -- Failed to decode the expected response
+                Left err -> Left $ UnexpectedResponseError $ show err
+                -- All good
+                Right b -> Right b
 
 call :: forall req res. EncodeJson req => DecodeJson res => NetworkConfig -> req -> Aff (Either ClientError res)
 call network req =
@@ -90,5 +100,5 @@ call network req =
         encodedRequestBody = encodeJson req
     in do
         rpcRes :: Either Affjax.Error (Affjax.Response Json) <- AffjaxNode.post ResponseFormat.json network.rpc $ Just $ RequestBody.json encodedRequestBody
-        pure $ decideError rpcRes
+        pure $ decodeResponse rpcRes
 

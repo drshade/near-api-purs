@@ -15,6 +15,7 @@ import NearApi.Rpc.AccessKeys (ViewAccessKeyListResult, ViewAccessKeyResult, all
 import NearApi.Rpc.AccountsContracts (account_changes, call_function, contract_code_changes, data_changes, view_account, view_code, view_state)
 import NearApi.Rpc.BlockChunk (ChunkParams(..), block, changes_in_block, chunk)
 import NearApi.Rpc.Client (ClientError, NearApi, runNearApi)
+import NearApi.Rpc.Gas (GasPriceParams(..), gas_price)
 import NearApi.Rpc.Network (network_info, status)
 import NearApi.Rpc.NetworkConfig (testnet)
 import NearApi.Rpc.Types.Common (BlockId(..), BlockId_Or_Finality(..), Finality(..))
@@ -127,5 +128,9 @@ main =
                         { chunk_id: "CeWk2xYiet4VvZXvXJ9mCiWd1VH23wG8Ztc3cpJRe4Mg" 
                         }) testnet
         log $ show chunk
+
+        price <- gas_price (GasPriceLatest)
+                        testnet
+        log $ show price
 
         log "done"

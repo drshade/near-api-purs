@@ -118,8 +118,8 @@ rpc method addExtras params network =
 
     in ExceptT $ liftAff do
         response <- AffjaxNode.post ResponseFormat.json network.rpc $ Just $ RequestBody.json $ rpcEnvelopeEncoded
+        log $ stringify rpcEnvelopeEncoded
         pure $ decodeResponse response
-
 
 noExtras :: Json -> Json
 noExtras x = x
@@ -149,3 +149,6 @@ addBlockIdOrFinality blockid_or_finality input =
     in 
         maybe input fromObject patched
 
+addRawParams :: Json -> Json -> Json
+addRawParams replacement input =
+    maybe input (fromObject <<< insert "params" replacement) (toObject input)

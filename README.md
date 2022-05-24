@@ -35,4 +35,38 @@ main = do
         Right id  -> log $ "Your account id: " <> show id
 ```
 
-# Test webhook
+# Supported API Calls
+
+A table tracking the implementation of all the NEAR Protocol RPC calls
+(listed at https://docs.near.org/docs/api/rpc).
+
+
+| Name | JSON-RPC Method | Discriminator | Status | Ref |
+| --- | --- | --- | --- | --- |
+| View access key | query | "request_type": "view_access_key" | https://docs.near.org/docs/api/rpc/access-keys#view-access-key | Done |
+| View access key list | query | "request_type": "view_access_key_list" | https://docs.near.org/docs/api/rpc/access-keys#view-access-key-list | Done |
+| View access key changes (single) | EXPERIMENTAL_changes | "changes_type": "single_access_key_changes" | https://docs.near.org/docs/api/rpc/access-keys#view-access-key-changes-single | Done |
+| View access key changes (all) | EXPERIMENTAL_changes |  "changes_type": "all_access_key_changes" | https://docs.near.org/docs/api/rpc/access-keys#view-access-key-changes-all | Done |
+| View account | query | "request_type": "view_account" | https://docs.near.org/docs/api/rpc/contracts#view-account | WIP |
+| View account changes | EXPERIMENTAL_changes | "changes_type": "account_changes" | https://docs.near.org/docs/api/rpc/contracts#view-account-changes | WIP |
+| View contract code | query | "request_type": "view_code" | https://docs.near.org/docs/api/rpc/contracts#view-contract-code | WIP |
+| View contract state | query | "request_type": "view_state" | https://docs.near.org/docs/api/rpc/contracts#view-contract-state | WIP |
+| View contract state changes | EXPERIMENTAL_changes | "changes_type": "data_changes" | https://docs.near.org/docs/api/rpc/contracts#view-contract-state-changes | WIP |
+| View contract code changes | EXPERIMENTAL_changes | "changes_type": "contract_code_changes" | https://docs.near.org/docs/api/rpc/contracts#view-contract-code-changes | WIP |
+| Call a contract function | query | "request_type": "call_function" | https://docs.near.org/docs/api/rpc/contracts#call-a-contract-function | WIP |
+| Block | block | N/A | https://docs.near.org/docs/api/rpc/block-chunk#block-details | WIP |
+| Changes in Block | EXPERIMENTAL_changes_in_block | N/A | https://docs.near.org/docs/api/rpc/block-chunk#changes-in-block | WIP |
+| Chunk | chunk | N/A | https://docs.near.org/docs/api/rpc/block-chunk#chunk-details | WIP |
+| Gas Price | gas_price | N/A | https://docs.near.org/docs/api/rpc/gas#gas-price | WIP |
+| Genesis Config | EXPERIMENTAL_genesis_config | N/A | https://docs.near.org/docs/api/rpc/protocol#genesis-config | WIP |
+| Protocol Config | EXPERIMENTAL_protocol_config | N/A | https://docs.near.org/docs/api/rpc/protocol#protocol-config | WIP |
+| Node Status | status | N/A | https://docs.near.org/docs/api/rpc/network#node-status | Done |
+| Network Info | network_info | N/A | https://docs.near.org/docs/api/rpc/network#network-info | Done |
+| Validation Status | validators | N/A | https://docs.near.org/docs/api/rpc/network#validation-status | WIP |
+| Send transaction (async) | broadcast_tx_async | N/A | https://docs.near.org/docs/api/rpc/transactions#send-transaction-async | WIP |
+| Send transaction (await) | broadcast_tx_commit | N/A | https://docs.near.org/docs/api/rpc/transactions#send-transaction-await | WIP |
+| Transaction Status | tx | N/A | https://docs.near.org/docs/api/rpc/transactions#transaction-status | WIP |
+| Transaction Status with Receipts | EXPERIMENTAL_tx_status | N/A | https://docs.near.org/docs/api/rpc/transactions#transaction-status-with-receipts | WIP |
+| Receipt by ID | EXPERIMENTAL_receipt | N/A | https://docs.near.org/docs/api/rpc/transactions#receipt-by-id | WIP |
+| Patch State | sandbox_patch_state | N/A | https://docs.near.org/docs/api/rpc/sandbox#patch-state | WIP |
+

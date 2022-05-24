@@ -2,74 +2,37 @@ module NearApi.Rpc.AccessKeys where
 
 import Prelude
 
-import Data.Argonaut.Core (Json, toObject, toString)
-import Data.Argonaut.Decode (JsonDecodeError(..), decodeJson)
-import Data.Argonaut.Decode.Class (class DecodeJson)
-import Data.Either (Either(..), hush)
-import Data.Foldable (foldr)
-import Data.Generic.Rep (class Generic)
-import Data.List (List(..), (:), catMaybes)
+import Data.Argonaut.Encode (class EncodeJson)
+import Data.List (List)
 import Data.Maybe (Maybe(..))
-import Data.Show.Generic (genericShow)
-import Data.Tuple (Tuple(..))
-import Foreign.Object (toUnfoldable)
-import NearApi.Rpc.Client (RpcCall, resultOf, rpc)
+import NearApi.Rpc.Client (RpcCall, addBlockIdOrFinality, noExtras, resultOf, rpc)
+import NearApi.Rpc.Types.Common (BlockId(..), BlockId_Or_Finality(..), Finality, PublicKey, AccountId)
+import NearApi.Rpc.Types.Permissions (Permission)
+import Prim.Row (class Union)
+import Record as Record
 
-data Permission
-    = FullAccessPermission
-    | PartialAccessPermission (List IndividualPermission)
 
-derive instance genericPermission :: Generic Permission _
-instance showPermission :: Show Permission where show = genericShow
-
-data IndividualPermission
-    = FunctionCall  { allowance :: String
-                    , method_names :: Array String
-                    , receiver_id :: String
-                    }
-    -- Could be others?
-
-derive instance genericIndividualPermission :: Generic IndividualPermission _
-instance showIndividualPermission :: Show IndividualPermission where show = genericShow
-
-instance decodeJsonPermission :: DecodeJson Permission where
-    decodeJson :: Json -> Either JsonDecodeError Permission
-    decodeJson blob =
-        -- Could be "FullAccess"
-        if toString blob == Just "FullAccess" then
-            Right $ FullAccessPermission
-        else
-            -- Probably an object, e.g.:
-            -- { "FunctionCall" : ... }
-            case toObject blob of
-                Nothing -> Left $ UnexpectedValue blob
-                Just obj -> 
-                    let
-                        permissionList :: List (Tuple String Json)
-                        permissionList = toUnfoldable obj
-                        parse :: String -> Json -> Maybe IndividualPermission
-                        parse "FunctionCall" json = hush $ FunctionCall <$> decodeJson json
-                        parse _ _ = Nothing
-                    -- Run parse() on all keys of the permission object and then collect up all the
-                    -- individual permissions into the list
-                    in Right $ PartialAccessPermission $ catMaybes $ foldr (\(Tuple k v) acc -> parse k v : acc) Nil $ permissionList
-
-type AccountId = String
-type PublicKey = String
+type ViewAccessKeyParams =
+    { account_id :: AccountId
+    , public_key :: PublicKey
+    }
 
 type ViewAccessKeyResult = 
     { permission :: Permission 
     }
 
-view_access_key :: AccountId -> PublicKey -> RpcCall ViewAccessKeyResult
-view_access_key account_id public_key = 
+view_access_key :: BlockId_Or_Finality -> ViewAccessKeyParams -> RpcCall ViewAccessKeyResult
+view_access_key blockid_or_finality params =
     resultOf <<< 
-        rpc "query" 
+        rpc "query" (addBlockIdOrFinality blockid_or_finality) 
             { request_type : "view_access_key" 
-            , finality : "final"
-            , account_id
-            , public_key
+            , account_id : params.account_id
+            , public_key : params.public_key
             }
+
+type ViewAccessKeyListParams =
+    { account_id :: AccountId
+    }
 
 type ViewAccessKeyListResult =
     { keys :: List 
@@ -80,14 +43,19 @@ type ViewAccessKeyListResult =
         }
     }
 
-view_access_key_list :: AccountId -> RpcCall ViewAccessKeyListResult
-view_access_key_list account_id = 
+view_access_key_list :: BlockId_Or_Finality -> ViewAccessKeyListParams -> RpcCall ViewAccessKeyListResult
+view_access_key_list blockid_or_finality params = 
     resultOf <<< 
-        rpc "query" 
+        rpc "query" (addBlockIdOrFinality blockid_or_finality)
             { request_type : "view_access_key_list" 
-            , finality : "final"
-            , account_id 
+            , account_id : params.account_id
             }
+
+type SingleAccessKeyChangesParams =
+    { keys :: List 
+        { account_id :: String, public_key :: String 
+        } 
+    }
 
 type SingleAccessKeyChangesResult =
     { changes :: List 
@@ -106,12 +74,26 @@ type SingleAccessKeyChangesResult =
         }
     }
 
-single_access_key_changes :: List { account_id :: String, public_key :: String } -> RpcCall SingleAccessKeyChangesResult
-single_access_key_changes keys =
+single_access_key_changes :: BlockId_Or_Finality -> SingleAccessKeyChangesParams -> RpcCall SingleAccessKeyChangesResult
+single_access_key_changes blockid_or_finality params =
     resultOf <<< 
-        rpc "EXPERIMENTAL_changes"
+        rpc "EXPERIMENTAL_changes" (addBlockIdOrFinality blockid_or_finality)
             { changes_type : "single_access_key_changes" 
-            , finality : "final"
-            , keys
+            , keys : params.keys
             }
 
+type AllAccessKeyChangesParams =
+    { account_ids :: List AccountId
+    }
+
+type AllAccessKeyChangesResult =
+    { }
+
+-- Reusing the SingleAccessKeyChangesResult as it looks like the same type is returned for this call
+all_access_key_changes :: BlockId_Or_Finality -> AllAccessKeyChangesParams -> RpcCall SingleAccessKeyChangesResult
+all_access_key_changes blockid_or_finality params =
+    resultOf <<< 
+        rpc "EXPERIMENTAL_changes" (addBlockIdOrFinality blockid_or_finality)
+            { changes_type : "all_access_key_changes" 
+            , account_ids : params.account_ids
+            }

@@ -6,18 +6,24 @@ import Affjax (Error, Response, printError) as Affjax
 import Affjax.Node (post) as AffjaxNode
 import Affjax.RequestBody (json) as RequestBody
 import Affjax.ResponseFormat (json) as ResponseFormat
-import Data.Argonaut.Core (Json, stringify)
+import Data.Argonaut.Core (Json, fromNumber, fromObject, fromString, stringify, toObject)
 import Data.Argonaut.Decode (class DecodeJson, JsonDecodeError, decodeJson)
 import Data.Argonaut.Encode (encodeJson)
 import Data.Argonaut.Encode.Class (class EncodeJson)
+import Data.Argonaut.Prisms (_Array, _Number, _Object)
 import Data.Either (Either(..))
 import Data.Generic.Rep (class Generic)
+import Data.Lens (preview, set)
+import Data.Lens.Index (ix)
 import Data.List (List)
-import Data.Maybe (Maybe(..))
+import Data.Maybe (Maybe(..), maybe)
 import Data.Show.Generic (genericShow)
 import Data.Tuple (Tuple(..))
 import Effect.Aff (Aff)
+import Effect.Class.Console (log)
+import Foreign.Object (Object, insert, lookup)
 import NearApi.Rpc.NetworkConfig (NetworkConfig)
+import NearApi.Rpc.Types.Common (BlockId(..), BlockId_Or_Finality(..), Finality(..))
 
 data ClientError
     = TransportError String
@@ -74,7 +80,8 @@ decodeResponse (Right { body : bodyjson }) =
                          $ errorBody.result.error
                 Left _ ->
                     case (decodeJson bodyjson :: Either JsonDecodeError a) of
-                        Left errorParsing -> Left $ UnexpectedResponseError (show errorParsing) (stringify bodyjson)
+                        Left errorParsing -> 
+                            Left $ UnexpectedResponseError (show errorParsing) (stringify bodyjson)
                         Right good -> Right good
 
 
@@ -86,8 +93,8 @@ decodeResponse (Right { body : bodyjson }) =
 rpc :: forall (p :: Row Type) (result :: Type).
         EncodeJson (Record p) =>
         DecodeJson result =>
-        String -> Record p -> NetworkConfig -> Aff (Either ClientError result)
-rpc method params network =
+        String -> (Json -> Json) -> Record p -> NetworkConfig -> Aff (Either ClientError result)
+rpc method addExtras params network =
     let -- The basic JSON-RPC envelope
         rpcEnvelope = 
             { jsonrpc : "2.0"
@@ -95,10 +102,42 @@ rpc method params network =
             , method
             , params
             }
+        rpcEnvelopeEncoded = addExtras $ encodeJson rpcEnvelope
     in do
         -- Make the network call as json in and out
         response :: Either Affjax.Error (Affjax.Response Json) 
-            <- AffjaxNode.post ResponseFormat.json network.rpc $ Just $ RequestBody.json $ encodeJson rpcEnvelope
+            <- AffjaxNode.post ResponseFormat.json network.rpc $ Just $ RequestBody.json $ rpcEnvelopeEncoded
+
+        _ <- log $ stringify rpcEnvelopeEncoded
+
         -- Decode any errors, or grab the result
         pure $ decodeResponse response
+
+noExtras :: Json -> Json
+noExtras x = x
+
+-- Basically add either "block_id" or "finality" to the params of JSON provided
+-- and encode correctly according to NEAR spec (either string or number for block_id)
+addBlockIdOrFinality :: BlockId_Or_Finality -> Json -> Json
+addBlockIdOrFinality blockid_or_finality input =
+    let
+        patch :: Object Json -> Object Json
+        patch = 
+            case blockid_or_finality of
+                BlockId (BlockNumber number) -> insert "block_id" (fromNumber number)
+                BlockId (BlockHash hash) -> insert "block_id" (fromString hash)
+                Finality Optimistic -> insert "finality" (fromString "optimistic")
+                Finality Final -> insert "finality" (fromString "final")
+
+        -- Very crude - but effectively patch the function above into the .params
+        -- (dealing with maybes everywhere)
+        patched :: Maybe (Object Json)
+        patched = do
+                objInput :: Object Json <- toObject input
+                params :: Json <- lookup "params" objInput
+                objParams :: Object Json <- toObject params
+                
+                pure $ insert "params" (fromObject $ patch objParams) objInput
+    in 
+        maybe input fromObject patched
 

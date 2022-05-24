@@ -4,7 +4,7 @@ import Prelude
 
 import Data.List (List)
 import Data.Maybe (Maybe)
-import NearApi.Rpc.Client (RpcCall, resultOf, rpc)
+import NearApi.Rpc.Client (RpcCall, noExtras, resultOf, rpc)
 
 type StatusResult =
     { version :: 
@@ -30,7 +30,7 @@ type StatusResult =
     }
 
 status :: RpcCall StatusResult
-status = resultOf <<< rpc "status" { }
+status = resultOf <<< rpc "status" noExtras {}
 
 type NetworkInfoResult =
     { active_peers :: List
@@ -50,4 +50,4 @@ type NetworkInfoResult =
     }
 
 network_info :: RpcCall NetworkInfoResult
-network_info = resultOf <<< rpc "network_info" {}
+network_info = resultOf <<< rpc "network_info" noExtras {} 

@@ -18,6 +18,7 @@ import NearApi.Rpc.Client (ClientError, NearApi, runNearApi)
 import NearApi.Rpc.Gas (GasPriceParams(..), gas_price)
 import NearApi.Rpc.Network (network_info, status)
 import NearApi.Rpc.NetworkConfig (testnet)
+import NearApi.Rpc.Protocol (genesis_config, protocol_config)
 import NearApi.Rpc.Types.Common (BlockId(..), BlockId_Or_Finality(..), Finality(..))
 import Prim.RowList (Nil)
 
@@ -132,5 +133,11 @@ main =
         price <- gas_price (GasPriceLatest)
                         testnet
         log $ show price
+
+        config <- genesis_config testnet
+        log $ show config
+
+        config <- protocol_config (Finality Final) testnet
+        log $ show config
 
         log "done"

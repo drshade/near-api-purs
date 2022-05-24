@@ -5,7 +5,7 @@ import Prelude
 import Data.List (List)
 import Data.Maybe (Maybe)
 import NearApi.Rpc.Client (RpcCall, addBlockIdOrFinality, noExtras, resultOf, rpc)
-import NearApi.Rpc.Types.Common (BlockId_Or_Finality, AccountId)
+import NearApi.Rpc.Types.Common (AccountId, BlockId_Or_Finality, PublicKey)
 
 type BlockParams =
     { 
@@ -29,7 +29,12 @@ type BlockResult =
         , timestamp :: Number
         , timestamp_nanosec :: String
         , random_value :: String
-        , validator_proposals :: List String
+        , validator_proposals :: List
+            { account_id :: AccountId
+            , public_key :: PublicKey
+            , stake :: String
+            , validator_stake_struct_version :: String
+            }
         , chunk_mask :: List Boolean
         , gas_price :: String
         , rent_paid :: String
@@ -61,7 +66,12 @@ type BlockResult =
         , balance_burnt :: String
         , outgoing_receipts_root :: String
         , tx_root :: String
-        , validator_proposals :: List String
+        , validator_proposals :: List
+            { account_id :: AccountId
+            , public_key :: PublicKey
+            , stake :: String
+            , validator_stake_struct_version :: String
+            }
         , signature :: String
         }
     }
@@ -91,8 +101,6 @@ changes_in_block blockid_or_finality params =
             {
             }
 
-
-
 -- Either chunk_id, or block_id + shard_id
 data ChunkParams
     = ChunkAtChunkId { chunk_id :: String }
@@ -117,7 +125,12 @@ type ChunkResult =
         , balance_burnt :: String
         , outgoing_receipts_root :: String
         , tx_root :: String
-        , validator_proposals :: List String
+        , validator_proposals :: List
+            { account_id :: AccountId
+            , public_key :: PublicKey
+            , stake :: String
+            , validator_stake_struct_version :: String
+            }
         , signature :: String
         }
     , transactions :: List String

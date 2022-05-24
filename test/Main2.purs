@@ -16,7 +16,7 @@ import NearApi.Rpc.AccountsContracts (account_changes, call_function, contract_c
 import NearApi.Rpc.BlockChunk (ChunkParams(..), block, changes_in_block, chunk)
 import NearApi.Rpc.Client (ClientError, NearApi, runNearApi)
 import NearApi.Rpc.Gas (GasPriceParams(..), gas_price)
-import NearApi.Rpc.Network (network_info, status)
+import NearApi.Rpc.Network (ValidatorsParams(..), network_info, status, validators)
 import NearApi.Rpc.NetworkConfig (testnet)
 import NearApi.Rpc.Protocol (genesis_config, protocol_config)
 import NearApi.Rpc.Types.Common (BlockId(..), BlockId_Or_Finality(..), Finality(..))
@@ -139,5 +139,8 @@ main =
 
         config <- protocol_config (Finality Final) testnet
         log $ show config
+
+        validators <- validators (ValidatorsLatest) testnet
+        log $ show validators
 
         log "done"

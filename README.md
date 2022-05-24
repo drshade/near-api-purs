@@ -54,15 +54,15 @@ A table tracking the implementation of all the NEAR Protocol RPC calls
 | View contract state changes | EXPERIMENTAL_changes | "changes_type": "data_changes" | https://docs.near.org/docs/api/rpc/contracts#view-contract-state-changes | Done |
 | View contract code changes | EXPERIMENTAL_changes | "changes_type": "contract_code_changes" | https://docs.near.org/docs/api/rpc/contracts#view-contract-code-changes | Done |
 | Call a contract function | query | "request_type": "call_function" | https://docs.near.org/docs/api/rpc/contracts#call-a-contract-function | Done |
-| Block | block | N/A | https://docs.near.org/docs/api/rpc/block-chunk#block-details | WIP |
-| Changes in Block | EXPERIMENTAL_changes_in_block | N/A | https://docs.near.org/docs/api/rpc/block-chunk#changes-in-block | WIP |
-| Chunk | chunk | N/A | https://docs.near.org/docs/api/rpc/block-chunk#chunk-details | WIP |
-| Gas Price | gas_price | N/A | https://docs.near.org/docs/api/rpc/gas#gas-price | WIP |
-| Genesis Config | EXPERIMENTAL_genesis_config | N/A | https://docs.near.org/docs/api/rpc/protocol#genesis-config | WIP |
-| Protocol Config | EXPERIMENTAL_protocol_config | N/A | https://docs.near.org/docs/api/rpc/protocol#protocol-config | WIP |
+| Block | block | N/A | https://docs.near.org/docs/api/rpc/block-chunk#block-details | Done |
+| Changes in Block | EXPERIMENTAL_changes_in_block | N/A | https://docs.near.org/docs/api/rpc/block-chunk#changes-in-block | Done |
+| Chunk | chunk | N/A | https://docs.near.org/docs/api/rpc/block-chunk#chunk-details | Done |
+| Gas Price | gas_price | N/A | https://docs.near.org/docs/api/rpc/gas#gas-price | Done |
+| Genesis Config | EXPERIMENTAL_genesis_config | N/A | https://docs.near.org/docs/api/rpc/protocol#genesis-config | Done |
+| Protocol Config | EXPERIMENTAL_protocol_config | N/A | https://docs.near.org/docs/api/rpc/protocol#protocol-config | Done |
 | Node Status | status | N/A | https://docs.near.org/docs/api/rpc/network#node-status | Done |
 | Network Info | network_info | N/A | https://docs.near.org/docs/api/rpc/network#network-info | Done |
-| Validation Status | validators | N/A | https://docs.near.org/docs/api/rpc/network#validation-status | WIP |
+| Validation Status | validators | N/A | https://docs.near.org/docs/api/rpc/network#validation-status | Done |
 | Send transaction (async) | broadcast_tx_async | N/A | https://docs.near.org/docs/api/rpc/transactions#send-transaction-async | WIP |
 | Send transaction (await) | broadcast_tx_commit | N/A | https://docs.near.org/docs/api/rpc/transactions#send-transaction-await | WIP |
 | Transaction Status | tx | N/A | https://docs.near.org/docs/api/rpc/transactions#transaction-status | WIP |

@@ -2,9 +2,11 @@ module NearApi.Rpc.Network where
 
 import Prelude
 
+import Data.Argonaut.Core (fromNumber, fromString, jsonNull, jsonSingletonArray)
 import Data.List (List)
 import Data.Maybe (Maybe)
-import NearApi.Rpc.Client (RpcCall, noExtras, resultOf, rpc)
+import NearApi.Rpc.Client (RpcCall, addRawParams, noExtras, resultOf, rpc)
+import NearApi.Rpc.Types.Common (AccountId, PublicKey)
 
 type StatusResult =
     { version :: 
@@ -50,4 +52,62 @@ type NetworkInfoResult =
     }
 
 network_info :: RpcCall NetworkInfoResult
-network_info = resultOf <<< rpc "network_info" noExtras {} 
+network_info = resultOf <<< rpc "network_info" noExtras {}
+
+data ValidatorsParams
+    = ValidatorsLatest
+    | ValidatorsAtBlockHeight Number
+    | ValidatorsAtBlockHash String
+
+type ValidatorsResult =
+    { current_validators :: List
+        { account_id :: AccountId
+        , public_key :: PublicKey
+        , is_slashed :: Boolean
+        , stake :: String
+        , shards :: List Number
+        , num_produced_blocks :: Number
+        , num_expected_blocks :: Number
+        }
+    , next_validators :: List
+        { account_id :: AccountId
+        , public_key :: PublicKey
+        , stake :: String
+        , shards :: List Number
+        }
+    , current_fishermen :: List
+        { account_id :: AccountId
+        , public_key :: PublicKey
+        , stake :: String
+        }
+    , next_fishermen :: List
+        { account_id :: AccountId
+        , public_key :: PublicKey
+        , stake :: String
+        }
+    , current_proposals :: List
+        { account_id :: AccountId
+        , public_key :: PublicKey
+        , stake :: String
+        }
+    , prev_epoch_kickout :: List
+        { account_id :: AccountId
+        , reason :: 
+            { "NotEnoughBlocks" :: Maybe
+                { expected :: Number
+                , produced :: Number
+                }
+              -- Could be other reasons? Add them!
+            }
+        }
+    , epoch_start_height :: Number
+    , epoch_height :: Number
+    }
+
+validators :: ValidatorsParams -> RpcCall ValidatorsResult
+validators ValidatorsLatest = 
+    resultOf <<< rpc "validators" (addRawParams $ jsonSingletonArray jsonNull) {}
+validators (ValidatorsAtBlockHeight block_height) =
+    resultOf <<< rpc "validators" (addRawParams $ jsonSingletonArray $ fromNumber block_height) {}
+validators (ValidatorsAtBlockHash block_hash) =
+    resultOf <<< rpc "validators" (addRawParams $ jsonSingletonArray $ fromString block_hash) {}

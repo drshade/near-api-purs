@@ -61,7 +61,7 @@ type SingleAccessKeyChangesResult =
     { changes :: List 
         { cause :: 
             { type :: String
-            , tx_hash :: String 
+            , tx_hash :: Maybe String 
             }
         , type :: String
         , change :: 

@@ -2,19 +2,31 @@ module Test.Main2 where
 
 import Prelude
 
+import Control.Monad.Except (ExceptT(..), runExceptT)
+import Data.Either (Either(..))
+import Data.Foldable (sequence_)
 import Data.Int (toNumber)
 import Data.List ((:), List(Nil))
 import Effect (Effect)
-import Effect.Aff (launchAff_)
+import Effect.Aff (Aff, launchAff_)
+import Effect.Aff.Class (liftAff)
 import Effect.Class.Console (log)
-import NearApi.Rpc.AccessKeys (all_access_key_changes, single_access_key_changes, view_access_key, view_access_key_list)
+import NearApi.Rpc.AccessKeys (ViewAccessKeyListResult, ViewAccessKeyResult, all_access_key_changes, single_access_key_changes, view_access_key, view_access_key_list)
+import NearApi.Rpc.Client (ClientError, NearApi, runNearApi)
 import NearApi.Rpc.Network (network_info, status)
 import NearApi.Rpc.NetworkConfig (testnet)
 import NearApi.Rpc.Types.Common (BlockId(..), BlockId_Or_Finality(..), Finality(..))
 
 main :: Effect Unit
 main =
-    launchAff_ do
+    let printResult :: forall a. Aff (Either ClientError a) -> Aff Unit
+        printResult r = do
+            er <- r
+            case er of
+                Left err -> log $ "Error -> " <> show err
+                Right  _ -> log "No errors"
+    in
+    launchAff_ $ printResult $ runNearApi do
         vak <- view_access_key (BlockId $ BlockHash "4CnpiFEMiJzuE2zkbdh1hR12JjAmLekSUVEFFVPuJ5Um")
                 { account_id : "tomwells.testnet"
                 , public_key : "ed25519:6szh72LjabzfaDnwLMcjs2bJpm1C7XkYubNEBDXy1cZ3"
@@ -59,3 +71,5 @@ main =
 
         info <- network_info testnet
         log $ show info
+
+        log "done"

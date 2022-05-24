@@ -6,6 +6,7 @@ import Affjax (Error, Response, printError) as Affjax
 import Affjax.Node (post) as AffjaxNode
 import Affjax.RequestBody (json) as RequestBody
 import Affjax.ResponseFormat (json) as ResponseFormat
+import Control.Monad.Except (ExceptT(..), runExceptT)
 import Data.Argonaut.Core (Json, fromNumber, fromObject, fromString, stringify, toObject)
 import Data.Argonaut.Decode (class DecodeJson, JsonDecodeError, decodeJson)
 import Data.Argonaut.Encode (encodeJson)
@@ -20,10 +21,17 @@ import Data.Maybe (Maybe(..), maybe)
 import Data.Show.Generic (genericShow)
 import Data.Tuple (Tuple(..))
 import Effect.Aff (Aff)
+import Effect.Aff.Class (liftAff)
 import Effect.Class.Console (log)
 import Foreign.Object (Object, insert, lookup)
 import NearApi.Rpc.NetworkConfig (NetworkConfig)
 import NearApi.Rpc.Types.Common (BlockId(..), BlockId_Or_Finality(..), Finality(..))
+
+
+type NearApi a = ExceptT ClientError Aff a
+
+runNearApi :: forall a. NearApi a -> Aff (Either ClientError a)
+runNearApi = runExceptT
 
 data ClientError
     = TransportError String
@@ -34,10 +42,13 @@ data ClientError
 derive instance genericClientError :: Generic ClientError _
 instance showClientError :: Show ClientError where show = genericShow
 
-type RpcCall a = NetworkConfig -> Aff (Either ClientError a)
+type RpcCall a = NetworkConfig -> NearApi a
 
-resultOf :: forall a. Aff (Either ClientError { result :: a }) -> Aff (Either ClientError a)
-resultOf x = x >>= (\y -> pure $ (_.result) <$> y)
+-- resultOf :: forall a. Aff (Either ClientError { result :: a }) -> Aff (Either ClientError a)
+resultOf :: forall a. NearApi ({ result :: a }) -> NearApi a
+resultOf x = do
+    { result: a } <- x
+    pure a
 
 -- If there is an error at the JSON-RPC level
 type JsonRpcResponseError =
@@ -93,7 +104,7 @@ decodeResponse (Right { body : bodyjson }) =
 rpc :: forall (p :: Row Type) (result :: Type).
         EncodeJson (Record p) =>
         DecodeJson result =>
-        String -> (Json -> Json) -> Record p -> NetworkConfig -> Aff (Either ClientError result)
+        String -> (Json -> Json) -> Record p -> NetworkConfig -> NearApi result
 rpc method addExtras params network =
     let -- The basic JSON-RPC envelope
         rpcEnvelope = 
@@ -103,15 +114,11 @@ rpc method addExtras params network =
             , params
             }
         rpcEnvelopeEncoded = addExtras $ encodeJson rpcEnvelope
-    in do
-        -- Make the network call as json in and out
-        response :: Either Affjax.Error (Affjax.Response Json) 
-            <- AffjaxNode.post ResponseFormat.json network.rpc $ Just $ RequestBody.json $ rpcEnvelopeEncoded
 
-        _ <- log $ stringify rpcEnvelopeEncoded
-
-        -- Decode any errors, or grab the result
+    in ExceptT $ liftAff do
+        response <- AffjaxNode.post ResponseFormat.json network.rpc $ Just $ RequestBody.json $ rpcEnvelopeEncoded
         pure $ decodeResponse response
+
 
 noExtras :: Json -> Json
 noExtras x = x

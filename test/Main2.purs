@@ -13,6 +13,7 @@ import Effect.Aff.Class (liftAff)
 import Effect.Class.Console (log)
 import NearApi.Rpc.AccessKeys (ViewAccessKeyListResult, ViewAccessKeyResult, all_access_key_changes, single_access_key_changes, view_access_key, view_access_key_list)
 import NearApi.Rpc.AccountsContracts (account_changes, call_function, contract_code_changes, data_changes, view_account, view_code, view_state)
+import NearApi.Rpc.BlockChunk (ChunkParams(..), block, changes_in_block, chunk)
 import NearApi.Rpc.Client (ClientError, NearApi, runNearApi)
 import NearApi.Rpc.Network (network_info, status)
 import NearApi.Rpc.NetworkConfig (testnet)
@@ -112,5 +113,19 @@ main =
                         , args_base64 : ""
                         } testnet
         log $ show result
+
+        block <- block (Finality Final)
+                        {
+                        } testnet
+        log $ show block
+
+        changes <- changes_in_block (Finality Final)
+                        { } testnet
+        log $ show changes
+
+        chunk <- chunk (ChunkAtChunkId 
+                        { chunk_id: "CeWk2xYiet4VvZXvXJ9mCiWd1VH23wG8Ztc3cpJRe4Mg" 
+                        }) testnet
+        log $ show chunk
 
         log "done"

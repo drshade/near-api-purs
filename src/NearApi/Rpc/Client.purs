@@ -56,9 +56,10 @@ type JsonRpcResponseError =
         { name :: String
         , cause :: 
             { name :: String
-            , info :: 
-                { error_message :: String 
-                }
+            -- This bit seems to vary a little - irritatingly!
+            -- , info :: 
+            --     { error_message :: String 
+            --     }
             }
         , code :: Int
         , message :: String
@@ -83,7 +84,7 @@ decodeResponse (Right { body : bodyjson }) =
     case (decodeJson bodyjson :: Either JsonDecodeError JsonRpcResponseError) of
         Right errorBody -> -- It is an error of type JsonRpcResponseError
             Left $ RpcError 
-                 $ errorBody.error.message <> " (caused by -> " <> errorBody.error.cause.info.error_message <> ")"
+                 $ errorBody.error.message <> " (caused by -> " <> errorBody.error.name <> ": " <> errorBody.error.message <> ": " <> errorBody.error.data <> ")"
         Left _ ->
             case (decodeJson bodyjson :: Either JsonDecodeError JsonRpcResponseResultError) of
                 Right errorBody -> -- It is an error of type JsonRpcResponseResultError

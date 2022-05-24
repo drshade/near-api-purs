@@ -2,14 +2,11 @@ module NearApi.Rpc.AccessKeys where
 
 import Prelude
 
-import Data.Argonaut.Encode (class EncodeJson)
 import Data.List (List)
-import Data.Maybe (Maybe(..))
-import NearApi.Rpc.Client (RpcCall, addBlockIdOrFinality, noExtras, resultOf, rpc)
-import NearApi.Rpc.Types.Common (BlockId(..), BlockId_Or_Finality(..), Finality, PublicKey, AccountId)
+import Data.Maybe (Maybe)
+import NearApi.Rpc.Client (RpcCall, addBlockIdOrFinality, resultOf, rpc)
+import NearApi.Rpc.Types.Common (AccountId, BlockId_Or_Finality, PublicKey)
 import NearApi.Rpc.Types.Permissions (Permission)
-import Prim.Row (class Union)
-import Record as Record
 
 
 type ViewAccessKeyParams =

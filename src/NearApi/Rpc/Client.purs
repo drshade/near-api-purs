@@ -39,8 +39,14 @@ data ClientError
     | MethodError String
     | UnexpectedResponseError String String
 
-derive instance genericClientError :: Generic ClientError _
-instance showClientError :: Show ClientError where show = genericShow
+instance showClientError :: Show ClientError where
+    show (TransportError err) = "TransportError: " <> err
+    show (RpcError err) = "RpcError: " <> err
+    show (MethodError err) = "MethodError: " <> err
+    show (UnexpectedResponseError err payload) = "UnexpectedResponseError: " <> err <> " Payload: " <> payload
+
+-- derive instance genericClientError :: Generic ClientError _
+-- instance showClientError :: Show ClientError where show = genericShow
 
 type RpcCall a = NetworkConfig -> NearApi a
 

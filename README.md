@@ -63,10 +63,10 @@ A table tracking the implementation of all the NEAR Protocol RPC calls
 | Node Status | status | N/A | https://docs.near.org/docs/api/rpc/network#node-status | Done |
 | Network Info | network_info | N/A | https://docs.near.org/docs/api/rpc/network#network-info | Done |
 | Validation Status | validators | N/A | https://docs.near.org/docs/api/rpc/network#validation-status | Done |
-| Send transaction (async) | broadcast_tx_async | N/A | https://docs.near.org/docs/api/rpc/transactions#send-transaction-async | WIP |
-| Send transaction (await) | broadcast_tx_commit | N/A | https://docs.near.org/docs/api/rpc/transactions#send-transaction-await | WIP |
-| Transaction Status | tx | N/A | https://docs.near.org/docs/api/rpc/transactions#transaction-status | WIP |
-| Transaction Status with Receipts | EXPERIMENTAL_tx_status | N/A | https://docs.near.org/docs/api/rpc/transactions#transaction-status-with-receipts | WIP |
-| Receipt by ID | EXPERIMENTAL_receipt | N/A | https://docs.near.org/docs/api/rpc/transactions#receipt-by-id | WIP |
-| Patch State | sandbox_patch_state | N/A | https://docs.near.org/docs/api/rpc/sandbox#patch-state | WIP |
+| Send transaction (async) | broadcast_tx_async | N/A | https://docs.near.org/docs/api/rpc/transactions#send-transaction-async | Done |
+| Send transaction (await) | broadcast_tx_commit | N/A | https://docs.near.org/docs/api/rpc/transactions#send-transaction-await | Done |
+| Transaction Status | tx | N/A | https://docs.near.org/docs/api/rpc/transactions#transaction-status | Done |
+| Transaction Status with Receipts | EXPERIMENTAL_tx_status | N/A | https://docs.near.org/docs/api/rpc/transactions#transaction-status-with-receipts | Done |
+| Receipt by ID | EXPERIMENTAL_receipt | N/A | https://docs.near.org/docs/api/rpc/transactions#receipt-by-id | Done |
+| Patch State | sandbox_patch_state | N/A | https://docs.near.org/docs/api/rpc/sandbox#patch-state | Do need it? |
 

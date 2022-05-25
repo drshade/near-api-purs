@@ -19,6 +19,7 @@ import NearApi.Rpc.Gas (GasPriceParams(..), gas_price)
 import NearApi.Rpc.Network (ValidatorsParams(..), network_info, status, validators)
 import NearApi.Rpc.NetworkConfig (testnet)
 import NearApi.Rpc.Protocol (genesis_config, protocol_config)
+import NearApi.Rpc.Transactions (receipt_id, tx, tx_status_with_receipts)
 import NearApi.Rpc.Types.Common (BlockId(..), BlockId_Or_Finality(..), Finality(..))
 import Prim.RowList (Nil)
 
@@ -142,5 +143,21 @@ main =
 
         validators <- validators (ValidatorsLatest) testnet
         log $ show validators
+
+        txstatus <- tx { sender: "zml.testnet"
+                       , transaction_hash: "EJM3ubBbXXRSeQfbYiX7PKYdLrBDe2fU3i5wL4aTFfEe"
+                       } testnet
+        log $ show txstatus
+
+        txstatus <- tx_status_with_receipts
+                       { sender: "zml.testnet"
+                       , transaction_hash: "EJM3ubBbXXRSeQfbYiX7PKYdLrBDe2fU3i5wL4aTFfEe"
+                       } testnet
+        log $ show txstatus
+
+        receipt <- receipt_id
+                      { receipt_id: "3qGNnAMkzqD9GKo9SkAvrqiUL8GUGxN8padw8WPRhDDx" 
+                      } testnet
+        log $ show receipt
 
         log "done"

@@ -6,6 +6,7 @@ import Data.Argonaut.Core (fromNumber, fromString, jsonNull, jsonSingletonArray)
 import Data.List (List(..), (:))
 import Data.Maybe (Maybe(..))
 import NearApi.Rpc.Client (RpcCall, addRawParams, noExtras, resultOf, rpc)
+import NearApi.Rpc.Types.Common (AmountInYocto(..))
 
 data GasPriceParams
     = GasPriceLatest
@@ -13,7 +14,7 @@ data GasPriceParams
     | GasPriceAtBlockHash String
 
 type GasPriceResult =
-    { gas_price :: String
+    { gas_price :: AmountInYocto
     }
 
 gas_price :: GasPriceParams -> RpcCall GasPriceResult

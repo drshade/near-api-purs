@@ -23,8 +23,8 @@ import NearApi.Rpc.Transactions (receipt_id, tx, tx_status_with_receipts)
 import NearApi.Rpc.Types.Common (BlockId(..), BlockId_Or_Finality(..), Finality(..))
 import Prim.RowList (Nil)
 
-main :: Effect Unit
-main =
+main_lots :: Effect Unit
+main_lots =
     let printResult :: forall a. Aff (Either ClientError a) -> Aff Unit
         printResult r = do
             er <- r
@@ -161,3 +161,26 @@ main =
         log $ show receipt
 
         log "done"
+
+main_example :: Effect Unit
+main_example =
+    let account_id = "tomwells.testnet"
+
+        printError :: forall a. Aff (Either ClientError a) -> Aff Unit
+        printError r = do
+            er <- r
+            case er of
+                Left err -> log $ "Error -> " <> show err
+                Right  _ -> log "Completed"
+
+    in launchAff_ $ printError $ runNearApi do
+        vakl <- view_access_key_list (Finality Final) { account_id : account_id } testnet
+        log $ show vakl
+        
+        account <- view_account (Finality Final) 
+                { account_id: account_id 
+                } testnet
+        log $ show account
+        -- log $ show $ "Your balance: " <> show account.amount -- <> fromYocto account.amount
+
+main = main_example

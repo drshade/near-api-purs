@@ -6,7 +6,7 @@ import Data.Argonaut.Core (fromArray, fromString, jsonSingletonArray)
 import Data.List (List)
 import Data.Maybe (Maybe)
 import NearApi.Rpc.Client (RpcCall, addRawParams, noExtras, resultOf, rpc)
-import NearApi.Rpc.Types.Common (PublicKey, AccountId)
+import NearApi.Rpc.Types.Common (AccountId, AmountInYocto(..), PublicKey)
 
 type BroadcastTxAsyncParams =
     { signed_transaction_base64 :: String
@@ -37,13 +37,13 @@ type BroadcastTxCommitResult =
         , receiver_id :: AccountId
         , actions :: List
             { "Transfer" :: Maybe
-                { deposit :: String
+                { deposit :: AmountInYocto
                 }
             , "FunctionCall" :: Maybe
                 { method_name :: String
                 , args :: String
                 , gas :: Number
-                , deposit :: String
+                , deposit :: AmountInYocto
                 }
               -- Could be others?
             }
@@ -98,13 +98,13 @@ type ReceiptSpec =
         { "Action" ::
             { actions :: List
                 { "Transfer" :: Maybe
-                    { deposit :: String
+                    { deposit :: AmountInYocto
                     }
                 , "FunctionCall" :: Maybe
                     { method_name :: String
                     , args :: String
                     , gas :: Number
-                    , deposit :: String
+                    , deposit :: AmountInYocto
                     }
         -- Could be others?
                 }

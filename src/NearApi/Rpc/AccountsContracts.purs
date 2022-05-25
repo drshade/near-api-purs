@@ -5,14 +5,14 @@ import Prelude
 import Data.List (List)
 import Data.Maybe (Maybe)
 import NearApi.Rpc.Client (RpcCall, addBlockIdOrFinality, resultOf, rpc)
-import NearApi.Rpc.Types.Common (BlockId_Or_Finality, AccountId)
+import NearApi.Rpc.Types.Common (AccountId, AmountInYocto(..), BlockId_Or_Finality)
 
 type ViewAccountParams =
     { account_id :: AccountId
     }
 
 type ViewAccountResult = 
-    { amount :: String
+    { amount :: AmountInYocto
     , locked :: String
     , code_hash :: String
     , storage_usage :: Number
@@ -42,7 +42,7 @@ type AccountChangesResult =
         , type :: String
         , change :: 
             { account_id :: AccountId
-            , amount :: String
+            , amount :: AmountInYocto
             , locked :: String
             , code_hash :: String
             , storage_usage :: Number

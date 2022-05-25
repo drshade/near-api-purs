@@ -12,12 +12,13 @@ spago install near-api-purs
 
 This library is centred around the following type:
 ```PureScript
-type Web3 = ExceptT Web3Error Aff a
+type NearApi a = ExceptT ClientError Aff a
 ```
 
 And therefore:
 ```PureScript
-runWeb3 :: forall a. Web3 a -> Aff (Either Web3Error a)
+runNearApi :: forall a. NearApi a -> Aff (Either ClientError a)
+runNearApi = runExceptT
 ```
 
 # Examples:

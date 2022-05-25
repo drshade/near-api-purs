@@ -13,6 +13,7 @@ import Data.Maybe (Maybe(..))
 import Data.Show.Generic (genericShow)
 import Data.Tuple (Tuple(..))
 import Foreign.Object (toUnfoldable)
+import NearApi.Rpc.Types.Common (AmountInYocto(..))
 
 
 data Permission
@@ -23,7 +24,7 @@ derive instance genericPermission :: Generic Permission _
 instance showPermission :: Show Permission where show = genericShow
 
 data IndividualPermission
-    = FunctionCall  { allowance :: String
+    = FunctionCall  { allowance :: AmountInYocto
                     , method_names :: Array String
                     , receiver_id :: String
                     }

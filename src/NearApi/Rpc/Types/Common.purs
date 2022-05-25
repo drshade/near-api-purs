@@ -2,17 +2,15 @@ module NearApi.Rpc.Types.Common where
 
 import Prelude
 
-import Data.Argonaut.Core (Json, fromNumber, isNumber, isString, toNumber, toString)
+import Data.Argonaut.Core (Json, isNumber, isString, toNumber, toString)
 import Data.Argonaut.Decode (JsonDecodeError(..))
 import Data.Argonaut.Decode.Class (class DecodeJson)
-import Data.Argonaut.Encode (class EncodeJson)
 import Data.BigInt (BigInt, fromNumber, fromString, toNumber, toString) as BigInt
 import Data.Either (Either(..))
 import Data.Generic.Rep (class Generic)
 import Data.Maybe (maybe)
 import Data.Number (pow)
 import Data.Number.Format (precision, toStringWith)
-import Data.Show.Generic (genericShow)
 
 type BlockHash = String
 

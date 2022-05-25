@@ -5,7 +5,7 @@ import Prelude
 import Data.List (List)
 import Data.Maybe (Maybe)
 import NearApi.Rpc.Client (RpcCall, addBlockIdOrFinality, resultOf, rpc)
-import NearApi.Rpc.Types.Common (AccountId, AmountInYocto(..), BlockId_Or_Finality)
+import NearApi.Rpc.Types.Common (AccountId, AmountInYocto, BlockId_Or_Finality)
 
 type ViewAccountParams =
     { account_id :: AccountId

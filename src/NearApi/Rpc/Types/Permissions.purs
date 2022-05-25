@@ -13,7 +13,7 @@ import Data.Maybe (Maybe(..))
 import Data.Show.Generic (genericShow)
 import Data.Tuple (Tuple(..))
 import Foreign.Object (toUnfoldable)
-import NearApi.Rpc.Types.Common (AmountInYocto(..))
+import NearApi.Rpc.Types.Common (AmountInYocto)
 
 
 data Permission

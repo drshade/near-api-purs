@@ -1,7 +1,5 @@
 module NearApi.Rpc.NetworkConfig where
 
-import Prelude
-
 type NetworkConfig = 
     { rpc :: String 
     }

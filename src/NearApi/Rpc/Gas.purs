@@ -3,10 +3,8 @@ module NearApi.Rpc.Gas where
 import Prelude
 
 import Data.Argonaut.Core (fromNumber, fromString, jsonNull, jsonSingletonArray)
-import Data.List (List(..), (:))
-import Data.Maybe (Maybe(..))
-import NearApi.Rpc.Client (RpcCall, addRawParams, noExtras, resultOf, rpc)
-import NearApi.Rpc.Types.Common (AmountInYocto(..))
+import NearApi.Rpc.Client (RpcCall, addRawParams, resultOf, rpc)
+import NearApi.Rpc.Types.Common (AmountInYocto)
 
 data GasPriceParams
     = GasPriceLatest

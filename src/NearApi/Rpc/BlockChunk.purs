@@ -76,8 +76,8 @@ type BlockResult =
         }
     }
 
-block :: BlockId_Or_Finality -> BlockParams -> RpcCall BlockResult
-block blockid_or_finality params =
+block :: BlockId_Or_Finality -> RpcCall BlockResult
+block blockid_or_finality =
     resultOf <<< 
         rpc "block" (addBlockIdOrFinality blockid_or_finality) 
             {
@@ -94,8 +94,8 @@ type ChangesInBlockResult =
         }
     }
 
-changes_in_block :: BlockId_Or_Finality -> ChangesInBlockParams -> RpcCall ChangesInBlockResult
-changes_in_block blockid_or_finality params =
+changes_in_block :: BlockId_Or_Finality -> RpcCall ChangesInBlockResult
+changes_in_block blockid_or_finality =
     resultOf <<< 
         rpc "EXPERIMENTAL_changes_in_block" (addBlockIdOrFinality blockid_or_finality) 
             {

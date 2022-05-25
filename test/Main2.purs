@@ -117,13 +117,10 @@ main_lots =
                         } testnet
         log $ show result
 
-        block <- block (Finality Final)
-                        {
-                        } testnet
+        block <- block (Finality Final) testnet
         log $ show block
 
-        changes <- changes_in_block (Finality Final)
-                        { } testnet
+        changes <- changes_in_block (Finality Final) testnet
         log $ show changes
 
         chunk <- chunk (ChunkAtChunkId 

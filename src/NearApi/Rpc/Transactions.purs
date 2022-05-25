@@ -6,7 +6,7 @@ import Data.Argonaut.Core (fromArray, fromString, jsonSingletonArray)
 import Data.List (List)
 import Data.Maybe (Maybe)
 import NearApi.Rpc.Client (RpcCall, addRawParams, noExtras, resultOf, rpc)
-import NearApi.Rpc.Types.Common (AccountId, AmountInYocto(..), PublicKey)
+import NearApi.Rpc.Types.Common (AccountId, AmountInYocto, PublicKey)
 
 type BroadcastTxAsyncParams =
     { signed_transaction_base64 :: String

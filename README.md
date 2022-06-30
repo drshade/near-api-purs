@@ -29,6 +29,7 @@ PureScript NEAR API
 - [x] Wrapper mechanism (easy to add existing and more in time)
 - [x] Complete all calls
 - [ ] Test case approach & framework
+- [ ] Implement key stores
 
 ### Milestone 3 - Typechecked Contracts
 
@@ -49,7 +50,7 @@ PureScript NEAR API
 - [ ] Finalize README
 - [ ] Figure out the process for publishing to purescript package set
     - Current recipe is documented here https://github.com/purescript-contrib/governance/blob/main/pursuit-preregistry.md
-- [ ] Review
+- [ ] Review repo / cleanup example & demo code
 - [ ] Publish
 - [ ] PureScript Community announcement (discord / slack / reddit)
 - [ ] Near community announcement (discord)
@@ -57,6 +58,7 @@ PureScript NEAR API
 
 ### Milestone Next - Better features!
 
+- [ ] A higher-level API - would we like one? Maybe something with "wallet" type functionality?
 - [ ] zk-snarks implementation
     - Probably a seperate project (and includes the rust smart-contract side too)
     - Native implementation of snarksjs? wrap it? 

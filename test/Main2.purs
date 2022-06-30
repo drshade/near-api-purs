@@ -178,6 +178,6 @@ main_example =
                 { account_id: account_id 
                 } testnet
         log $ show account
-        -- log $ show $ "Your balance: " <> show account.amount -- <> fromYocto account.amount
+        log $ show $ "Your balance: " <> show account.amount -- <> fromYocto account.amount
 
 main = main_example

@@ -22,6 +22,10 @@ import NearApi.Rpc.NetworkConfig (NetworkConfig)
 import NearApi.Rpc.Types.Common (BlockId(..), BlockId_Or_Finality(..), Finality(..))
 
 
+-- RPC Level (low level calls) - totally upto caller to deal with weird shit
+-- Build a nicer highlevel thing onto of it (incl. creaing a valid signed tx)
+
+
 type NearApi a = ExceptT ClientError Aff a
 
 runNearApi :: forall a. NearApi a -> Aff (Either ClientError a)

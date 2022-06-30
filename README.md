@@ -1,7 +1,67 @@
-# near-sdk-purs
+# near-api-purs
+
 PureScript NEAR API 
 
-# 100% work in progress - not ready for using
+** 100% work in progress - not ready for using **
+
+# Milestones
+
+## Summary
+
+| #    | Description                    | Status      |
+| ---  | ---                            | ---         |
+| 1    | Proof of concept               | Complete    |
+| 2    | Complete list of RPC methods   | In Progress |
+| 3    | Typechecked Contracts          | In Progress |
+| 4    | Documentation                  | Not Started |
+| 5    | Package Publish                | Not Started |
+| Next | Features Beyond Core NEAR API) | Not Started |
+
+## Details
+
+### Milestone 1 - Proof of Concept
+
+- [x] Feability of interacting with the NEAR API directly
+- [x] Idiomatic approach using monadic `ExceptT (Either e r)` does it feel good to use?
+
+### Milestone 2 - Complete list of RPC methods
+
+- [x] Wrapper mechanism (easy to add existing and more in time)
+- [x] Complete all calls
+- [ ] Test case approach & framework
+
+### Milestone 3 - Typechecked Contracts
+
+- [ ] Figure out best approach for type safe contract calls
+    - First prize: Inspired by work in `purescript-routing` and `parsec` packages which would match method names to constructors based on type level definitions
+    - Second prize: Code generation during compilation step (but unlikely as no equivalent to TemplateHaskell in PureScript AFAIK)
+    - Third prize: Dynamic method calls using static strings e.g. `contract.call VIEW_METHOD "method_name"` - but maybe a nicer way to wrap this up for better DX
+- [ ] Of course typechecking won't be able to really verify types of deployed Near Contract - and therefore must fail gracefully / give good runtime messages
+
+### Milestone 4 - Documentation
+
+- [ ] Pursuit documentation generated and reviewed
+- [ ] Hosting documentation on github (or linked to future Pursuit pages)
+
+### Milestone 5 - Package Publish
+
+- [ ] Finalize LICENSE (feedback from PureScript / Near)
+- [ ] Finalize README
+- [ ] Figure out the process for publishing to purescript package set
+    - Current recipe is documented here https://github.com/purescript-contrib/governance/blob/main/pursuit-preregistry.md
+- [ ] Review
+- [ ] Publish
+- [ ] PureScript Community announcement (discord / slack / reddit)
+- [ ] Near community announcement (discord)
+- [ ] Get on radar of Near API team (future changes, API design feedback, etc)
+
+### Milestone Next - Better features!
+
+- [ ] zk-snarks implementation
+    - Probably a seperate project (and includes the rust smart-contract side too)
+    - Native implementation of snarksjs? wrap it? 
+    - Circom compiler integration? Seems very messy. Does Near have an opinion?
+
 
 # Installation:
 ```zsh

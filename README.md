@@ -1,12 +1,9 @@
 # near-api-purs
 
-PureScript NEAR API 
+A PureScript implementation of the NEAR Protocol API. Currently a work-in-progress with low-level RPC calls already available for using (see examples in test folder) - however missing a few key features for full scale adoption (e.g. Contract calls!) 
 
-** 100% work in progress - not ready for using **
-
-# Milestones & Deliverables
-
-## Deliverables
+<a name="deliverables"></a>
+# Deliverables
 
 We have proposed a NEAR GRANT to complete the initial version of this library, allocating Milestones against Deliverables in the following phases:
 
@@ -23,7 +20,7 @@ We have proposed a NEAR GRANT to complete the initial version of this library, a
 |             | | | Total --> | _$25,000_ |
 |             | | | | |
 
-## Milestones
+# Milestones
 
 | #    | Description                    | Status      |
 | ---  | ---                            | ---         |

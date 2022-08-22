@@ -19,7 +19,9 @@ We have proposed a NEAR GRANT to complete the initial version of this library, a
 | 2             | Completed documentation and developer experience | 30 December 2022 | | $7,500 | 
 |               | [Milestone 4 - Documentation](#milestone4) | | [ ] |
 |               | [Milestone 5 - Package Publish](#milestone5) | | [ ] |
-|               | | Total --> | _$25,000_ |
+|
+|               | | | Total --> | _$25,000_ |
+|
 
 ## Milestones
 

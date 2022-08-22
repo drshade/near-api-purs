@@ -18,6 +18,7 @@
   , "numbers"
   , "prelude"
   , "record"
+  , "strings"
   , "transformers"
   , "tuples"
   ]

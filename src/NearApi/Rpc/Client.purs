@@ -122,7 +122,7 @@ rpc method addExtras params network =
 
     in ExceptT $ liftAff do
         response <- AffjaxNode.post ResponseFormat.json network.rpc $ Just $ RequestBody.json $ rpcEnvelopeEncoded
-        log $ stringify rpcEnvelopeEncoded
+        -- log $ stringify rpcEnvelopeEncoded
         pure $ decodeResponse response
 
 noExtras :: Json -> Json

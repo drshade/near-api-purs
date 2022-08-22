@@ -1,4 +1,4 @@
-module Test.Main2 where
+module Test.Complex where
 
 import Prelude
 
@@ -23,9 +23,11 @@ import NearApi.Rpc.Transactions (receipt_id, tx, tx_status_with_receipts)
 import NearApi.Rpc.Types.Common (BlockId(..), BlockId_Or_Finality(..), Finality(..))
 import Prim.RowList (Nil)
 
-main_lots :: Effect Unit
-main_lots =
-    let printResult :: forall a. Aff (Either ClientError a) -> Aff Unit
+main :: Effect Unit
+main =
+    let blockHash = "BfG53pSokBty5C5WzyaVD7RDQLxcJ6WwrT9e1waGpomY"
+        blockNumber = 98243975
+        printResult :: forall a. Aff (Either ClientError a) -> Aff Unit
         printResult r = do
             er <- r
             case er of
@@ -33,13 +35,13 @@ main_lots =
                 Right  _ -> log "No errors"
     in
     launchAff_ $ printResult $ runNearApi do
-        vak <- view_access_key (BlockId $ BlockHash "4CnpiFEMiJzuE2zkbdh1hR12JjAmLekSUVEFFVPuJ5Um")
+        vak <- view_access_key (BlockId $ BlockHash blockHash)
                 { account_id : "tomwells.testnet"
                 , public_key : "ed25519:6szh72LjabzfaDnwLMcjs2bJpm1C7XkYubNEBDXy1cZ3"
                 } testnet
         log $ show vak
 
-        vak <- view_access_key (BlockId $ BlockNumber (toNumber 90660621))
+        vak <- view_access_key (BlockId $ BlockNumber (toNumber blockNumber))
                 { account_id : "tomwells.testnet"
                 , public_key : "ed25519:6szh72LjabzfaDnwLMcjs2bJpm1C7XkYubNEBDXy1cZ3"
                 } testnet
@@ -67,7 +69,7 @@ main_lots =
                     } testnet
         log $ show changes
 
-        changes <- all_access_key_changes (BlockId $ BlockHash "8pX4zyWM7Sh35eCJWojLpt53oQptGff212hj8qzA9VVu") 
+        changes <- all_access_key_changes (BlockId $ BlockHash blockHash) 
                     { account_ids : "tomwells.testnet" : Nil
                     } testnet
         log $ show changes
@@ -158,26 +160,3 @@ main_lots =
         log $ show receipt
 
         log "done"
-
-main_example :: Effect Unit
-main_example =
-    let account_id = "tomwells.testnet"
-
-        printError :: forall a. Aff (Either ClientError a) -> Aff Unit
-        printError r = do
-            er <- r
-            case er of
-                Left err -> log $ "Error -> " <> show err
-                Right  _ -> log "Completed"
-
-    in launchAff_ $ printError $ runNearApi do
-        vakl <- view_access_key_list (Finality Final) { account_id : account_id } testnet
-        log $ show vakl
-        
-        account <- view_account (Finality Final) 
-                { account_id: account_id 
-                } testnet
-        log $ show account
-        log $ show $ "Your balance: " <> show account.amount -- <> fromYocto account.amount
-
-main = main_example

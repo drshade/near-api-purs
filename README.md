@@ -4,9 +4,24 @@ PureScript NEAR API
 
 ** 100% work in progress - not ready for using **
 
-# Milestones
+# Milestones & Deliverables
 
-## Summary
+## Deliverables
+
+We have proposed a NEAR GRANT to complete the initial version of this library, allocating Milestones against Deliverables in the following phases:
+
+| Deliverable # | Description | Completion Date | Complete | Grant Amount |
+| ---           | ---         | ---    | --- | --- |
+| 1             | Working and complete software | 30 October 2022 | | $17,500 |
+|               | [Milestone 1 - Proof of Concept](#milestone1) | | [x] |
+|               | [Milestone 2 - Complete list of RPC methods](#milestone2) | | [ ] |
+|               | [Milestone 3 - Typechecked Contracts](#milestone3) | | [ ] |
+| 2             | Completed documentation and developer experience | 30 December 2022 | | $7,500 | 
+|               | [Milestone 4 - Documentation](#milestone4) | | [ ] |
+|               | [Milestone 5 - Package Publish](#milestone5) | | [ ] |
+|               | | Total --> | _$25,000_ |
+
+## Milestones
 
 | #    | Description                    | Status      |
 | ---  | ---                            | ---         |
@@ -17,33 +32,38 @@ PureScript NEAR API
 | 5    | Package Publish                | Not Started |
 | Next | Features Beyond Core NEAR API) | Not Started |
 
-## Details
+## Detailed Tasks per Milestone
 
+<a name="milestone1"></a>
 ### Milestone 1 - Proof of Concept
 
 - [x] Feability of interacting with the NEAR API directly
 - [x] Idiomatic approach using monadic `ExceptT (Either e r)` does it feel good to use?
 
+<a name="milestone2"></a>
 ### Milestone 2 - Complete list of RPC methods
 
 - [x] Wrapper mechanism (easy to add existing and more in time)
-- [x] Complete all calls
+- [x] Complete all calls ([full list](#supported_calls))
 - [ ] Test case approach & framework
 - [ ] Implement key stores
 
+<a name="milestone3"></a>
 ### Milestone 3 - Typechecked Contracts
 
-- [ ] Figure out best approach for type safe contract calls
+- [ ] Type safe contract calls
     - First prize: Inspired by work in `purescript-routing` and `parsec` packages which would match method names to constructors based on type level definitions
     - Second prize: Code generation during compilation step (but unlikely as no equivalent to TemplateHaskell in PureScript AFAIK)
     - Third prize: Dynamic method calls using static strings e.g. `contract.call VIEW_METHOD "method_name"` - but maybe a nicer way to wrap this up for better DX
 - [ ] Of course typechecking won't be able to really verify types of deployed Near Contract - and therefore must fail gracefully / give good runtime messages
 
+<a name="milestone4"></a>
 ### Milestone 4 - Documentation
 
 - [ ] Pursuit documentation generated and reviewed
 - [ ] Hosting documentation on github (or linked to future Pursuit pages)
 
+<a name="milestone5"></a>
 ### Milestone 5 - Package Publish
 
 - [ ] Finalize LICENSE (feedback from PureScript / Near)
@@ -64,41 +84,8 @@ PureScript NEAR API
     - Native implementation of snarksjs? wrap it? 
     - Circom compiler integration? Seems very messy. Does Near have an opinion?
 
-
-# Installation:
-```zsh
-spago install near-api-purs
-```
-
-# Overview
-
-This library is centred around the following type:
-```PureScript
-type NearApi a = ExceptT ClientError Aff a
-```
-
-And therefore:
-```PureScript
-runNearApi :: forall a. NearApi a -> Aff (Either ClientError a)
-runNearApi = runExceptT
-```
-
-# Examples:
-```PureScript
-main :: Effect Unit
-main = do
-    accountId <- runWeb3 do
-        near <- NearApi.connect mainnet
-        wallet <- NearApi.wallet near
-        accountId <- NearApi.accountId wallet
-        pure accountId
-
-    case accountId of
-        Left err  -> log $ "An error occurred: " <> show err
-        Right id  -> log $ "Your account id: " <> show id
-```
-
-# Supported API Calls
+<a name="supported_calls"></a>
+### Supported API Calls
 
 A table tracking the implementation of all the NEAR Protocol RPC calls
 (listed at https://docs.near.org/docs/api/rpc).
@@ -132,4 +119,40 @@ A table tracking the implementation of all the NEAR Protocol RPC calls
 | Transaction Status with Receipts | EXPERIMENTAL_tx_status | N/A | https://docs.near.org/docs/api/rpc/transactions#transaction-status-with-receipts | Done |
 | Receipt by ID | EXPERIMENTAL_receipt | N/A | https://docs.near.org/docs/api/rpc/transactions#receipt-by-id | Done |
 | Patch State | sandbox_patch_state | N/A | https://docs.near.org/docs/api/rpc/sandbox#patch-state | Do need it? |
+
+# NEAR PureScript API - Official README
+
+## Installation:
+```zsh
+spago install near-api-purs
+```
+
+## Overview
+
+This library is centred around the following type:
+```PureScript
+type NearApi a = ExceptT ClientError Aff a
+```
+
+And therefore:
+```PureScript
+runNearApi :: forall a. NearApi a -> Aff (Either ClientError a)
+runNearApi = runExceptT
+```
+
+## Examples:
+```PureScript
+main :: Effect Unit
+main = do
+    accountId <- runWeb3 do
+        near <- NearApi.connect mainnet
+        wallet <- NearApi.wallet near
+        accountId <- NearApi.accountId wallet
+        pure accountId
+
+    case accountId of
+        Left err  -> log $ "An error occurred: " <> show err
+        Right id  -> log $ "Your account id: " <> show id
+```
+
 

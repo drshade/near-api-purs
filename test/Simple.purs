@@ -34,6 +34,6 @@ main =
                 { account_id: account_id 
                 } testnet
         -- log $ show account
-        log $ account_id <> " balance: " <> show account.amount
+        log $ account_id   <> " balance " <> show account.amount
         log $ "      as at block number " <> show account.block_height
         log $ "                    hash " <> account.block_hash

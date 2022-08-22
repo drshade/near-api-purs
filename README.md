@@ -10,18 +10,18 @@ PureScript NEAR API
 
 We have proposed a NEAR GRANT to complete the initial version of this library, allocating Milestones against Deliverables in the following phases:
 
-| Deliverable # | Description | Completion Date | Complete | Grant Amount |
-| ---           | ---         | ---    | --- | --- |
-| 1             | Working and complete software | 30 October 2022 | | $17,500 |
-|               | [Milestone 1 - Proof of Concept](#milestone1) | | [x] |
-|               | [Milestone 2 - Complete list of RPC methods](#milestone2) | | [ ] |
-|               | [Milestone 3 - Typechecked Contracts](#milestone3) | | [ ] |
-| 2             | Completed documentation and developer experience | 30 December 2022 | | $7,500 | 
-|               | [Milestone 4 - Documentation](#milestone4) | | [ ] |
-|               | [Milestone 5 - Package Publish](#milestone5) | | [ ] |
-|
-|               | | | Total --> | _$25,000_ |
-|
+| Deliverable | Description | Completion Date | Complete | Grant Amount |
+| ---         | ---         | ---             | ---      | ---          |
+| 1           | Working and complete software | 30 October 2022 | | $17,500 |
+|             | [Milestone 1 - Proof of Concept](#milestone1) | | [x] |
+|             | [Milestone 2 - Complete list of RPC methods](#milestone2) | | [ ] |
+|             | [Milestone 3 - Typechecked Contracts](#milestone3) | | [ ] |
+| 2           | Completed documentation and developer experience | 30 December 2022 | | $7,500 | 
+|             | [Milestone 4 - Documentation](#milestone4) | | [ ] |
+|             | [Milestone 5 - Package Publish](#milestone5) | | [ ] |
+|             | | | | |
+|             | | | Total --> | _$25,000_ |
+|             | | | | |
 
 ## Milestones
 

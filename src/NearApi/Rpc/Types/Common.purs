@@ -14,9 +14,9 @@ import Data.Number.Format (precision, toStringWith)
 
 type BlockHash = String
 
-data BlockId 
+data BlockId
     = BlockNumber Number
-    | BlockHash   BlockHash
+    | BlockHash BlockHash
 
 data Finality
     = Optimistic
@@ -24,7 +24,7 @@ data Finality
 
 -- Typically calls require a BlockId OR Finality, so lets describe that
 data BlockId_Or_Finality
-    = BlockId  BlockId
+    = BlockId BlockId
     | Finality Finality
 
 type AccountId = String
@@ -32,23 +32,23 @@ type PublicKey = String
 
 newtype AmountInYocto = AmountInYocto BigInt.BigInt
 
-derive instance genericAmountInYocto :: Generic AmountInYocto _
-instance showAmountInYocto :: Show AmountInYocto where 
-    show (AmountInYocto amount) = 
-        let nearAmt :: Number
+derive instance genericAmountInYocto ∷ Generic AmountInYocto _
+instance showAmountInYocto ∷ Show AmountInYocto where
+    show (AmountInYocto amount) =
+        let
+            nearAmt ∷ Number
             nearAmt = (BigInt.toNumber amount / (10.0 `pow` 24.0))
         in
-        (toStringWith (precision 10) nearAmt) <> "Ⓝ" <> " (" <> BigInt.toString amount <> ")"
+            (toStringWith (precision 10) nearAmt) <> "Ⓝ" <> " (" <> BigInt.toString amount <> ")"
 
 -- Allows for decoding of values in strings e.g. "12354" or numbers 12354
-instance decodeJsonAmountInYocto :: DecodeJson AmountInYocto where
-    decodeJson :: Json -> Either JsonDecodeError AmountInYocto
+instance decodeJsonAmountInYocto ∷ DecodeJson AmountInYocto where
+    decodeJson ∷ Json → Either JsonDecodeError AmountInYocto
     decodeJson json =
         if isString json then
             maybe (Left $ UnexpectedValue json) (Right <<< AmountInYocto) (toString json >>= BigInt.fromString)
-        else 
-            if isNumber json then
-                maybe (Left $ UnexpectedValue json) (Right <<< AmountInYocto) (toNumber json >>= BigInt.fromNumber)
-            else
-                Left $ UnexpectedValue json
-        -- Right $ AmountInYocto 0.0
+        else if isNumber json then
+            maybe (Left $ UnexpectedValue json) (Right <<< AmountInYocto) (toNumber json >>= BigInt.fromNumber)
+        else
+            Left $ UnexpectedValue json
+-- Right $ AmountInYocto 0.0

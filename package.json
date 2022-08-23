@@ -1,8 +1,16 @@
 {
+  "scripts": {
+    "clean": "rm -rf output .psci_modules .spago",
+    "format": "purs-tidy format-in-place -cr 'src/**/*.purs' 'test/**/*.purs'",
+    "build": "spago build"
+  },
   "dependencies": {
     "big-integer": "^1.6.51",
-    "purescript": "^0.15.0",
+    "purescript": "^0.15.4",
     "spago": "^0.20.9",
     "xhr2": "^0.2.1"
+  },
+  "devDependencies": {
+    "purs-tidy": "^0.9.1"
   }
 }

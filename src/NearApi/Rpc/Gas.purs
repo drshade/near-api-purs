@@ -12,19 +12,19 @@ data GasPriceParams
     | GasPriceAtBlockHash String
 
 type GasPriceResult =
-    { gas_price :: AmountInYocto
+    { gas_price ∷ AmountInYocto
     }
 
-gas_price :: GasPriceParams -> RpcCall GasPriceResult
+gas_price ∷ GasPriceParams → RpcCall GasPriceResult
 gas_price GasPriceLatest =
-    resultOf <<< 
+    resultOf <<<
         rpc "gas_price" (addRawParams $ jsonSingletonArray jsonNull)
-            { }
+            {}
 gas_price (GasPriceAtBlockHeight block_height) =
-    resultOf <<< 
+    resultOf <<<
         rpc "gas_price" (addRawParams $ jsonSingletonArray $ fromNumber block_height)
-            { }
+            {}
 gas_price (GasPriceAtBlockHash block_hash) =
-    resultOf <<< 
+    resultOf <<<
         rpc "gas_price" (addRawParams $ jsonSingletonArray $ fromString block_hash)
-            { }
+            {}
